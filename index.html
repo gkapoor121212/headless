@@ -4,17 +4,25 @@
 	<body>
 		<h1>Welcome to Headless Drupal Website created using Angular JS</h1>
 		<div ng-app="myApp" ng-controller="myCtrl"> 
-			<p>Today's welcome message is:</p>
-			<h1>{{myWelcome}}</h1>
+			<h2>First Article of Drupal Website:</h2>
+			<h3>{{node1.title[0].value}}</h3>
+			<p>{{node1.body[0].value | htmlToPlaintext}}</p><br>
+			<img ng-src="{{node1.field_image[0].url}}" alt="{{ node1.field_image[0].alt}}">
 		</div>
 		<script>
 			var app = angular.module('myApp', []);
 			app.controller('myCtrl', function($scope, $http) {
     			$http.get("http://drupalapi.gktwlab.com/node/1?_format=json")
     			.then(function(response) {
-        			$scope.myWelcome = response.data;
+        			$scope.node1 = response.data;
     			});
 			});
+  			app.filter('htmlToPlaintext', function() {
+    			return function(text) {
+      					return  text ? String(text).replace(/<[^>]+>/gm, '') : '';
+    				};
+  				}
+			);
 		</script>
 	</body>
 </html>
