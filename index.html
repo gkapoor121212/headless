@@ -1,13 +1,60 @@
 <!DOCTYPE html>
 <html>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<body>
-		<h1>Welcome to Headless Drupal Website created using Angular JS</h1>
-		<div ng-app="myApp" ng-controller="myCtrl"> 
-			<h2>First Article of Drupal Website:</h2>
-			<h3>{{node1.title[0].value}}</h3>
-			<p>{{node1.body[0].value | htmlToPlaintext}}</p><br>
-			<img ng-src="{{node1.field_image[0].url}}" alt="{{ node1.field_image[0].alt}}">
+		<div class="jumbotron text-center">
+			<h1>Welcome to Headless Drupal Website created using Angular JS</h1>
+		</div>
+		<div ng-app="myApp" ng-controller="myCtrl">
+			<div class="container">
+  				<div class="row">
+  					<div class="col-sm-4">
+  					</div>
+					<div class="col-sm-4">
+						<h2>First Article of Drupal Website</h2>
+					</div>
+					<div class="col-sm-4">
+  					</div>
+				</div>
+			</div><br>
+			<div class="container">
+  				<div class="row"> 
+					    <div class="col-sm-6">
+							<h3>{{node1.title[0].value}}</h3>
+							<p>{{node1.body[0].value | htmlToPlaintext}}</p>
+						</div>
+						<div class="col-sm-6">
+							<img ng-src="{{node1.field_image[0].url}}" alt="{{ node1.field_image[0].alt}}" class="img-rounded">
+						</div>
+					</div>
+				</div>
+			<div class="container">
+  				<div class="row">
+  					<div class="col-sm-4">
+  					</div>
+					<div class="col-sm-4">
+						<h2>This is a view of Lorem Ipsum Content</h2>
+					</div>
+					<div class="col-sm-4">
+  					</div>
+				</div>
+			</div><br>
+			<div ng-repeat="x in view1">
+				<div class="container">
+  					<div class="row">
+						<div class="col-sm-6"> 
+							<h3>{{ x.title[0].value }}</h3>
+							<p>{{ x.body[0].value | trimCharacters }}</p><br>
+						</div>
+						<div class="col-sm-6">
+							<img ng-src="{{ x.field_image[0].url }}" alt="{{ x.field_image[0].alt }}" width="200px" height="200px"><br>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<script>
 			var app = angular.module('myApp', []);
@@ -16,10 +63,20 @@
     			.then(function(response) {
         			$scope.node1 = response.data;
     			});
+    			$http.get("http://drupalapi.gktwlab.com/exposed")
+    			.then(function(response) {
+        			$scope.view1 = response.data;
+    			});
 			});
   			app.filter('htmlToPlaintext', function() {
     			return function(text) {
       					return  text ? String(text).replace(/<[^>]+>/gm, '') : '';
+    				};
+  				}
+			);
+			app.filter('trimCharacters', function() {
+    			return function(text) {
+      					return  text ? String(text).substring(0,400)+"..." : '';
     				};
   				}
 			);
